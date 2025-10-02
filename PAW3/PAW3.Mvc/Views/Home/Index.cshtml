@@ -1,0 +1,42 @@
+﻿@model HomeViewModel
+@{
+    ViewData["Title"] = "Home Page";
+}
+
+<div class="text-center">
+    <h1 class="display-4">Jorge Alfaro Guillen <br> @Model.Title</h1>
+    <p>Programacion Avanzada en Web</p>
+</div>
+
+<h2>@Model.Title</h2>
+
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th>Id</th>
+            <th>Nombre</th>
+            <th>Apellido</th>
+            <th>Edad</th>
+            <th>Pais</th>
+            <th>Telefono</th>
+            <th>Genero</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var person in Model.People)
+        {
+            <tr>
+                <td>@person.Id</td>
+                <td>@person.FirstName</td>
+                <td>@person.LastName</td>
+                <td>@person.Age</td>
+                <td>@person.Country</td>
+                <td>@person.Phone</td>
+                <td>@person.Gender</td>
+
+            </tr>
+        }
+    </tbody>
+</table>
+
+
