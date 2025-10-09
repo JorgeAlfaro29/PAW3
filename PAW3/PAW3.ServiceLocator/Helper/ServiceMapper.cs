@@ -22,9 +22,6 @@ public class ServiceMapper : IServiceMapper
         var service = name.ToLower() switch
         {
             "product" => (IService<T>)serviceProvider.GetRequiredService<IService<ProductDTO>>(),
-
-            "category" => (IService<T>)serviceProvider.GetRequiredService<IService<CategoryDTO>>(),
-
             "category" => (IService<T>)serviceProvider.GetRequiredService<IService<CategoryDTO>>(),
             "component" => (IService<T>)serviceProvider.GetRequiredService<IService<ComponentDTO>>(),
             "inventory" => (IService<T>)serviceProvider.GetRequiredService<IService<InventoryDTO>>(),
