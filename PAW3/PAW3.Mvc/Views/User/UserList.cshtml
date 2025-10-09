@@ -1,0 +1,83 @@
+﻿@model PAW3.Mvc.Models.HomeViewModel
+
+@{
+    ViewData["Title"] = "UserList";
+}
+
+<h1>UserList</h1>
+
+<p>
+    <a asp-action="Create">Create New</a>
+</p>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(m => m.User.First().UserId)
+            </th>
+            <th>
+                @Html.DisplayNameFor(m => m.User.First().Username)
+            </th>
+            <th>
+                @Html.DisplayNameFor(m => m.User.First().Email)
+            </th>
+            <th>
+                @Html.DisplayNameFor(m => m.User.First().PasswordHash)
+            </th>
+            <th>
+                @Html.DisplayNameFor(m => m.User.First().CreatedAt)
+            </th>
+            <th>
+                @Html.DisplayNameFor(m => m.User.First().IsActive)
+            </th>
+            <th>
+                @Html.DisplayNameFor(m => m.User.First().LastModified)
+            </th>
+            <th>
+                @Html.DisplayNameFor(m => m.User.First().ModifiedBy)
+            </th>
+            <th>
+                @Html.DisplayNameFor(m => m.User.First().RoleId)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model.User) {
+        <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.UserId)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Username)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Email)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.PasswordHash)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.CreatedAt)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.IsActive)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.LastModified)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.ModifiedBy)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.RoleId)
+                </td>
+            <td>
+                @Html.ActionLink("Edit", "Edit", new { /* id=item.PrimaryKey */ }) |
+                @Html.ActionLink("Details", "Details", new { /* id=item.PrimaryKey */ }) |
+                @Html.ActionLink("Delete", "Delete", new { /* id=item.PrimaryKey */ })
+            </td>
+        </tr>
+}
+    </tbody>
+</table>

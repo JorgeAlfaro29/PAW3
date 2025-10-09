@@ -1,14 +1,35 @@
 using PAW3.Architecture;
+using PAW3.Models.DTOs;
 using PAW3.Mvc.ServiceLocator;
+using PAW3.ServiceLocator.Helper;
 using PAW3.ServiceLocator.Services;
+using PAW3.ServiceLocator.Services.Contracts;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();
 builder.Services.AddScoped<IRestProvider, RestProvider>();
-//builder.Services.AddScoped<IDogDataService, DogDataService>();
+builder.Services.AddScoped<IDogDataService, DogDataService>();
+builder.Services.AddScoped<IProductService, ProductService>();
+builder.Services.AddScoped<ICategoryService, CategoryService>();
+builder.Services.AddScoped<IRoleService, RoleService>();
+builder.Services.AddScoped<ITaskService, TaskService>();
+builder.Services.AddScoped<IUserService, UserService>();
+builder.Services.AddScoped<IUserActionService, UserActionService>();
+builder.Services.AddScoped<IUserRoleService, UserRoleService>();
+
+
 builder.Services.AddScoped<IServiceLocatorService, ServiceLocatorService>();
+builder.Services.AddScoped<IServiceMapper, ServiceMapper>();
+builder.Services.AddScoped<IService<ProductDTO>, ProductService>();
+builder.Services.AddScoped<IService<CategoryDTO>, CategoryService>();
+builder.Services.AddScoped<IService<RoleDTO>, RoleService>();
+builder.Services.AddScoped<IService<TaskDTO>, TaskService>();
+builder.Services.AddScoped<IService<UserDTO>, UserService>();
+builder.Services.AddScoped<IService<UserActionDTO>, UserActionService>();
+builder.Services.AddScoped<IService<UserRoleDTO>, UserRoleService>();
+
 
 var app = builder.Build();
 

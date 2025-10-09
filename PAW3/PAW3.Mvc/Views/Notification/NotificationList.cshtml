@@ -1,0 +1,59 @@
+﻿@model PAW3.Mvc.Models.HomeViewModel
+
+@{
+    ViewData["Title"] = "NotificationList";
+}
+
+<h1>NotificationList</h1>
+
+<p>
+    <a asp-action="Create">Create New</a>
+</p>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(m => m.Notification.First().Id)
+            </th>
+            <th>
+                @Html.DisplayNameFor(m => m.Notification.First().UserId)
+            </th>
+            <th>
+                @Html.DisplayNameFor(m => m.Notification.First().Message)
+            </th>
+            <th>
+                @Html.DisplayNameFor(m => m.Notification.First().IsRead)
+            </th>
+            <th>
+                @Html.DisplayNameFor(m => m.Notification.First().CreatedAt)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model.Notification) {
+        <tr>
+            <td>
+                    @Html.DisplayFor(modelItem => item.Id)
+            </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.UserId)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Message)
+            </td>
+            <td>
+                    @Html.DisplayFor(modelItem => item.IsRead)
+            </td>
+            <td>
+                    @Html.DisplayFor(modelItem => item.CreatedAt)
+            </td>
+            <td>
+                @Html.ActionLink("Edit", "Edit", new { /* id=item.PrimaryKey */ }) |
+                @Html.ActionLink("Details", "Details", new { /* id=item.PrimaryKey */ }) |
+                @Html.ActionLink("Delete", "Delete", new { /* id=item.PrimaryKey */ })
+            </td>
+        </tr>
+}
+    </tbody>
+</table>

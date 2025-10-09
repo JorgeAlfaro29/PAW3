@@ -1,0 +1,47 @@
+﻿@model PAW3.Mvc.Models.HomeViewModel
+
+@{
+    ViewData["Title"] = "UserRoleList";
+}
+
+<h1>UserRoleList</h1>
+
+<p>
+    <a asp-action="Create">Create New</a>
+</p>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(m => m.UserRole.First().Id)
+            </th>
+            <th>
+                @Html.DisplayNameFor(m => m.UserRole.First().UserId)
+            </th>
+            <th>
+                @Html.DisplayNameFor(m => m.UserRole.First().RoldId)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model.UserRole) {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.Id)
+            </td
+            <td>
+                @Html.DisplayFor(modelItem => item.UserId)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.RoldId)
+            </td>
+            <td>
+                @Html.ActionLink("Edit", "Edit", new { /* id=item.PrimaryKey */ }) |
+                @Html.ActionLink("Details", "Details", new { /* id=item.PrimaryKey */ }) |
+                @Html.ActionLink("Delete", "Delete", new { /* id=item.PrimaryKey */ })
+            </td>
+        </tr>
+}
+    </tbody>
+</table>

@@ -1,89 +1,106 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using PAW3.Data.DTOs;
+﻿using System.Text.Json;
+using Microsoft.AspNetCore.Mvc;
 using PAW3.Data.Models;
+using PAW3.Models.DTOs;
+using PAW3.ServiceLocator.Helper;
 using PAW3.ServiceLocator.Services;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
-namespace PAW3.ServiceLocator.Controllers
+namespace PAW3.ServiceLocator.Controllers;
+
+[Route("api/[controller]")]
+[ApiController]
+public class ServiceLocatorController(IServiceMapper serviceMapper) : ServiceControllerBase(serviceMapper)
 {
-    [Route("api/[controller]")]
-    [ApiController]
-    public class ServiceLocatorController : ControllerBase
+    // GET api/<ServiceLocatorController>/5
+    [HttpGet("{name}")]
+    public async Task<IEnumerable<object>> Get(string name)
     {
-        private readonly ITempDataService _tempDataService;
-        private readonly IDogDataService _dogDataService;
-        private readonly IPeopleDataService _peopleDataService;
+        if (ServiceResolvers.TryGetValue(name.ToLower(), out var resolver))
+            return await resolver();
 
-        public ServiceLocatorController(ITempDataService tempDataService, IDogDataService dogDataService, IPeopleDataService peopleDataService)
-        {
-            _tempDataService = tempDataService;
-            _dogDataService = dogDataService;
-            _peopleDataService = peopleDataService;
-        }
-
-        // GET: api/<ServiceLocatorController>
-        [HttpGet]
-        public IEnumerable<string> Get()
-        {
-            return new string[] { "value1", "value2" };
-        }
-
-        /*
-        // GET api/<ServiceLocatorController>/5
-        [HttpGet("{id}")]
-        public async Task<IEnumerable<string>> Get(int id)
-        {            
-            switch (id)
-            {
-                case 1:
-                    return await _tempDataService.GetDataAsync();
-                case 2:
-                    var result = await _dogDataService.GetDataAsync();
-                    return [result];
-                case 3:
-                    return await _peopleDataService.GetAsEnumerableStringAsync();
-                    
-                default:
-                    return [];
-            }
-
-            return [];
-        }*/
-        
-        
-        // GET api/<ServiceLocatorController>/5
-        [HttpGet("{id}")]
-        public async Task<IEnumerable<PersonDTO>> GetPeople(int id)
-        {
-            switch (id)
-            {
-                case 1:
-                    return await _peopleDataService.GetPeopleAsync<PersonDTO>();
-
-                default:
-                    return [];
-            }
-
-        }
-        
-
-        // POST api/<ServiceLocatorController>
-        [HttpPost]
-        public void Post([FromBody] string value)
-        {
-        }
-
-        // PUT api/<ServiceLocatorController>/5
-        [HttpPut("{id}")]
-        public void Put(int id, [FromBody] string value)
-        {
-        }
-
-        // DELETE api/<ServiceLocatorController>/5
-        [HttpDelete("{id}")]
-        public void Delete(int id)
-        {
-        }
+        return [];
     }
+
+
+    // POST api/ServiceLocator/category
+    [HttpPost("{name}")]
+    public async Task<IActionResult> Post(string name, [FromBody] CategoryDTO category)
+    {
+           
+        var service = await serviceMapper.GetServiceAsync<CategoryDTO>("category");
+
+        if (service is ICategoryService categoryService)
+        {
+            var created = await categoryService.CreateAsync(category);
+            return Ok(created);
+        }
+
+        return BadRequest("Servicio no encontrado.");
+    }
+
+    /*
+    // POST api/ServiceLocator/category
+    [HttpPost("{name2}")]
+    public async Task<IActionResult> PostComponent(string name, [FromBody] ComponentDTO component)
+    {
+        
+        var service = await serviceMapper.GetServiceAsync<ComponentDTO>("component");
+
+        if (service is IComponentService componentService)
+        {
+            var created = await componentService.CreateAsync(component);
+            return Ok(created);
+        }
+
+        return BadRequest("Servicio no encontrado.");
+    }
+    */
+
+    /*
+    // PUT api/ServiceLocator/{name}/{id}
+    [HttpPut("{name}/{id}")]
+    public async Task<IActionResult> Put(string name, int id, [FromBody] CategoryDTO category)
+    {
+        if (name.ToLower() != "category")
+            return BadRequest("Este endpoint solo soporta 'category' por ahora.");
+
+        var service = await serviceMapper.GetServiceAsync<CategoryDTO>("category");
+
+        if (service is ICategoryService categoryService)
+        {
+            var updated = await categoryService.UpdateAsync(id, category);
+
+            if (updated is not null)
+                return Ok(updated);
+
+            return BadRequest("No se pudo actualizar la categoría.");
+        }
+
+        return BadRequest("Servicio no encontrado.");
+    }
+
+    // DELETE api/ServiceLocator/{name}/{id}
+    [HttpDelete("{name}/{id}")]
+    public async Task<IActionResult> Delete(string name, int id)
+    {
+        if (name.ToLower() != "category")
+            return BadRequest("Este endpoint solo soporta 'category' por ahora.");
+
+        var service = await serviceMapper.GetServiceAsync<CategoryDTO>("category");
+
+        if (service is ICategoryService categoryService)
+        {
+            var success = await categoryService.DeleteAsync(id);
+
+            if (success)
+                return Ok($"Categoría con ID {id} eliminada correctamente.");
+
+            return BadRequest("No se pudo eliminar la categoría.");
+        }
+
+        return BadRequest("Servicio no encontrado.");
+    }
+    */
 }

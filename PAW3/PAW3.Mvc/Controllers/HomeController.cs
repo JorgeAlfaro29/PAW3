@@ -1,6 +1,8 @@
 using Microsoft.AspNetCore.Mvc;
+using PAW3.Models.DTOs;
 using PAW3.Mvc.Models;
 using PAW3.Mvc.ServiceLocator;
+using PAW3.ServiceLocator.Helper;
 using System.Diagnostics;
 
 namespace PAW3.Mvc.Controllers
@@ -9,23 +11,21 @@ namespace PAW3.Mvc.Controllers
     {
         private readonly ILogger<HomeController> _logger;
         private readonly IServiceLocatorService _serviceLocator;
+        private readonly IServiceMapper _serviceMapper;
 
-        public HomeController(ILogger<HomeController> logger, IServiceLocatorService serviceLocator)
+        public HomeController(ILogger<HomeController> logger, IServiceLocatorService serviceLocator, IServiceMapper serviceMapper)
         {
             _logger = logger;
             _serviceLocator = serviceLocator;
+            _serviceMapper = serviceMapper;
         }
 
         public async Task<IActionResult> Index()
         {
-            //var names = await _serviceLocator.GetDataAsync("1");
-            //var dog = await _serviceLocator.GetDataAsync("2");
-            var people = await _serviceLocator.GetDataAsync("1");
+            var products = await _serviceLocator.GetDataAsync<ProductDTO>("product");
             var homeViewModel = new HomeViewModel()
             {
-                Title = "Tarea #1",
-                People = people,
-                //Dog = dog
+                Products = products
             };
             return View(homeViewModel);
         }

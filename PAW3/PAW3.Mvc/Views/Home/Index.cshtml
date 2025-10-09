@@ -4,39 +4,58 @@
 }
 
 <div class="text-center">
-    <h1 class="display-4">Jorge Alfaro Guillen <br> @Model.Title</h1>
-    <p>Programacion Avanzada en Web</p>
+    <h1 class="display-4">Welcome @Model.Title</h1>
+    <p>Learn about <a href="https://learn.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
 </div>
 
-<h2>@Model.Title</h2>
-
-<table class="table table-striped">
+<table class="table table-dark table-striped">
     <thead>
         <tr>
             <th>Id</th>
-            <th>Nombre</th>
-            <th>Apellido</th>
-            <th>Edad</th>
-            <th>Pais</th>
-            <th>Telefono</th>
-            <th>Genero</th>
+            <th>Name</th>
+            <th>Description</th>
+            <th>Rating</th>
+            <th>LastModified</th>
         </tr>
     </thead>
-    <tbody>
-        @foreach (var person in Model.People)
+    <tbody>        
+        @foreach (var item in Model.Products)
         {
             <tr>
-                <td>@person.Id</td>
-                <td>@person.FirstName</td>
-                <td>@person.LastName</td>
-                <td>@person.Age</td>
-                <td>@person.Country</td>
-                <td>@person.Phone</td>
-                <td>@person.Gender</td>
-
+                <td>@item.ProductId</td>
+                <td>@item.ProductName</td>
+                <td>@item.Description</td>            
+                <td>@item.Rating</td>
+                <td>@item.LastModified</td>
             </tr>
-        }
+        }        
     </tbody>
 </table>
 
+<ul>
+    @foreach (var item in Model.Items)
+    {
+        var text = evalItem(@item);
+        if (doWeKnowHim(item)){ 
+            <li>@item - @text!!!</li>
+        }
+        else{
+            <li>@item</li>
+        }
+    }
+</ul>
 
+@functions {
+    public bool doWeKnowHim(string item)
+    {
+        return item.Contains("Les");
+    }
+
+    public string evalItem(string item)
+    {
+        if (item.Contains("Les"))
+            return "lo conocemos";
+        else
+            return "ok";
+    }
+}
