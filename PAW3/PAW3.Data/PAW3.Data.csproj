@@ -7,9 +7,15 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Folder Include="MSSQL\" />
-    <Folder Include="Mongodb\" />
-    <Folder Include="Azure\" />
+    <Compile Remove="Azure\**" />
+    <Compile Remove="Mongodb\**" />
+    <Compile Remove="MSSQL\**" />
+    <EmbeddedResource Remove="Azure\**" />
+    <EmbeddedResource Remove="Mongodb\**" />
+    <EmbeddedResource Remove="MSSQL\**" />
+    <None Remove="Azure\**" />
+    <None Remove="Mongodb\**" />
+    <None Remove="MSSQL\**" />
   </ItemGroup>
 
   <ItemGroup>

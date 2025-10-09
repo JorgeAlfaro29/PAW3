@@ -1,0 +1,77 @@
+﻿@model PAW3.Mvc.Models.HomeViewModel
+
+@{
+    ViewData["Title"] = "TaskList";
+}
+
+<h1>TaskList</h1>
+
+<p>
+    <a asp-action="Create">Create New</a>
+</p>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(m => m.Task.First().Id)
+            </th>
+            <th>
+                @Html.DisplayNameFor(m => m.Task.First().Name)
+            </th>
+            <th>
+                @Html.DisplayNameFor(m => m.Task.First().Description)
+            </th>
+            <th>
+                @Html.DisplayNameFor(m => m.Task.First().Status)
+            </th>
+            <th>
+                @Html.DisplayNameFor(m => m.Task.First().DueDate)
+            </th>
+            <th>
+                @Html.DisplayNameFor(m => m.Task.First().CreatedAt)
+            </th>
+            <th>
+                @Html.DisplayNameFor(m => m.Task.First().LastModified)
+            </th>
+            <th>
+                @Html.DisplayNameFor(m => m.Task.First().ModifiedBy)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model.Task) {
+        <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Id)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Name)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Description)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Status)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.DueDate)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.CreatedAt)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.LastModified)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.ModifiedBy)
+                </td>
+            <td>
+                @Html.ActionLink("Edit", "Edit", new { /* id=item.PrimaryKey */ }) |
+                @Html.ActionLink("Details", "Details", new { /* id=item.PrimaryKey */ }) |
+                @Html.ActionLink("Delete", "Delete", new { /* id=item.PrimaryKey */ })
+            </td>
+        </tr>
+}
+    </tbody>
+</table>

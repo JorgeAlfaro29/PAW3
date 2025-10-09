@@ -1,0 +1,88 @@
+﻿@model PAW3.Mvc.Models.HomeViewModel
+
+@{
+    ViewData["Title"] = "SupplierList";
+}
+
+<h1>SupplierList</h1>
+
+<p>
+    <a asp-action="Create">Create New</a>
+</p>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(m => m.Supplier.First().SupplierId)
+            </th>
+            <th>
+                @Html.DisplayNameFor(m => m.Supplier.First().SupplierName)
+            </th>
+            <th>
+                @Html.DisplayNameFor(m => m.Supplier.First().ContactName)
+            </th>
+            <th>
+                @Html.DisplayNameFor(m => m.Supplier.First().ContactTitle)
+            </th>
+            <th>
+                @Html.DisplayNameFor(m => m.Supplier.First().Phone)
+            </th>
+            <th>
+                @Html.DisplayNameFor(m => m.Supplier.First().Address)
+            </th>
+            <th>
+                @Html.DisplayNameFor(m => m.Supplier.First().City)
+            </th>
+            <th>
+                @Html.DisplayNameFor(m => m.Supplier.First().Country)
+            </th>
+            <th>
+                @Html.DisplayNameFor(m => m.Supplier.First().LastModified)
+            </th>
+            <th>
+                @Html.DisplayNameFor(m => m.Supplier.First().ModifiedBy)
+            </th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model.Supplier) {
+        <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.SupplierId)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.SupplierName)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.ContactName)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.ContactTitle)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Phone)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Address)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.City)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Country)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.LastModified)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.ModifiedBy)
+                </td>
+            <td>
+                @Html.ActionLink("Edit", "Edit", new { /* id=item.PrimaryKey */ }) |
+                @Html.ActionLink("Details", "Details", new { /* id=item.PrimaryKey */ }) |
+                @Html.ActionLink("Delete", "Delete", new { /* id=item.PrimaryKey */ })
+            </td>
+        </tr>
+}
+    </tbody>
+</table>

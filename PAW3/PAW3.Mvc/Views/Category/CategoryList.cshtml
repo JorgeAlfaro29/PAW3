@@ -1,0 +1,66 @@
+﻿@model PAW3.Mvc.Models.HomeViewModel
+
+@{
+    ViewData["Title"] = "CategoryList";
+}
+
+<h1>CategoryList</h1>
+
+<p>
+    <a asp-action="Create">Create New</a>
+</p>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(m => m.Category.First().CategoryId)
+            </th>
+            <th>
+                @Html.DisplayNameFor(m => m.Category.First().CategoryName)
+            </th>
+            <th>
+                @Html.DisplayNameFor(m => m.Category.First().Description)
+            </th>
+            <th>
+                @Html.DisplayNameFor(m => m.Category.First().LastModified)
+            </th>
+            <th>
+                @Html.DisplayNameFor(m => m.Category.First().ModifiedBy)
+            </th>
+            <th>
+                @Html.DisplayNameFor(m => m.Category.First().Products)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model.Category) {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.CategoryId)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.CategoryName)
+            </td>
+            <td>
+                    @Html.DisplayFor(modelItem => item.Description)
+            </td>
+            <td>
+                    @Html.DisplayFor(modelItem => item.LastModified)
+            </td>
+            <td>
+                    @Html.DisplayFor(modelItem => item.ModifiedBy)
+            </td>
+            <td>
+                    @Html.DisplayFor(modelItem => item.Products)
+            </td>
+
+            <td>
+                @Html.ActionLink("Edit", "Edit", new { /* id=item.PrimaryKey */ }) |
+                @Html.ActionLink("Details", "Details", new { /* id=item.PrimaryKey */ }) |
+                @Html.ActionLink("Delete", "Delete", new { /* id=item.PrimaryKey */ })
+            </td>
+        </tr>
+}
+    </tbody>
+</table>
