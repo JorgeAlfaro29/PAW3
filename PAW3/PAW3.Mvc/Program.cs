@@ -29,7 +29,8 @@ builder.Services.AddScoped<IService<TaskDTO>, TaskService>();
 builder.Services.AddScoped<IService<UserDTO>, UserService>();
 builder.Services.AddScoped<IService<UserActionDTO>, UserActionService>();
 builder.Services.AddScoped<IService<UserRoleDTO>, UserRoleService>();
-
+builder.Services.AddScoped<ICategoryServiceMvc, CategoryServiceMvc>();
+builder.Services.AddScoped<IInventoryServiceMvc, InventoryServiceMvc>();
 
 var app = builder.Build();
 

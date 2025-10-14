@@ -23,7 +23,7 @@ public class ServiceLocatorController(IServiceMapper serviceMapper) : ServiceCon
         return [];
     }
 
-
+    /*
     // POST api/ServiceLocator/category
     [HttpPost("{name}")]
     public async Task<IActionResult> Post(string name, [FromBody] CategoryDTO category)
@@ -38,27 +38,12 @@ public class ServiceLocatorController(IServiceMapper serviceMapper) : ServiceCon
         }
 
         return BadRequest("Servicio no encontrado.");
-    }
+    }*/
+    
 
+    
     /*
-    // POST api/ServiceLocator/category
-    [HttpPost("{name2}")]
-    public async Task<IActionResult> PostComponent(string name, [FromBody] ComponentDTO component)
-    {
-        
-        var service = await serviceMapper.GetServiceAsync<ComponentDTO>("component");
-
-        if (service is IComponentService componentService)
-        {
-            var created = await componentService.CreateAsync(component);
-            return Ok(created);
-        }
-
-        return BadRequest("Servicio no encontrado.");
-    }
-    */
-
-    /*
+    
     // PUT api/ServiceLocator/{name}/{id}
     [HttpPut("{name}/{id}")]
     public async Task<IActionResult> Put(string name, int id, [FromBody] CategoryDTO category)
@@ -70,9 +55,9 @@ public class ServiceLocatorController(IServiceMapper serviceMapper) : ServiceCon
 
         if (service is ICategoryService categoryService)
         {
-            var updated = await categoryService.UpdateAsync(id, category);
+            var updated = await categoryService.UpdateAsync(category);
 
-            if (updated is not null)
+            if (updated != null)
                 return Ok(updated);
 
             return BadRequest("No se pudo actualizar la categoría.");

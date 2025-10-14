@@ -13,12 +13,14 @@ namespace PAW3.Mvc.Controllers
     {
         private readonly ILogger<CategoryController> _logger;
         private readonly IServiceLocatorService _serviceLocator;
+        private readonly ICategoryServiceMvc _categoryService;
         private readonly IServiceMapper _serviceMapper;
-        public CategoryController(ILogger<CategoryController> logger, IServiceLocatorService serviceLocator, IServiceMapper serviceMapper)
+        public CategoryController(ILogger<CategoryController> logger, IServiceLocatorService serviceLocator, IServiceMapper serviceMapper, ICategoryServiceMvc categoryService)
         {
             _logger = logger;
             _serviceLocator = serviceLocator;
             _serviceMapper = serviceMapper;
+            _categoryService = categoryService;
         }
 
         // GET: CategoryController
@@ -55,7 +57,8 @@ namespace PAW3.Mvc.Controllers
             try
             {
                 // Usamos el ServiceLocatorService para crear la categoría en la API
-                var createdCategory = await _serviceLocator.CreateAsync("category", category);
+                //var createdCategory = await _serviceLocator.CreateAsync("category", category);
+                var createdCategory = await _categoryService.CreateAsync(category);
 
                 // Redirigimos a la lista de categorías
                 return RedirectToAction(nameof(CategoryList));
@@ -69,43 +72,77 @@ namespace PAW3.Mvc.Controllers
         }
 
         // GET: CategoryController/Edit/5
-        public ActionResult Edit(int id)
+        public async Task<IActionResult> Edit(int id)
         {
-            return View();
+            var categories = await _serviceLocator.GetDataAsync<CategoryDTO>("category");
+            var category = categories.FirstOrDefault(c => c.CategoryId == id);
+
+            if (category == null)
+                return NotFound();
+
+            return View(category);
         }
 
         // POST: CategoryController/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit(int id, IFormCollection collection)
+        public async Task<IActionResult> Edit(int id, CategoryDTO category)
         {
+            if (id != category.CategoryId)
+            {
+                ModelState.AddModelError("", "El ID no coincide.");
+                return View(category);
+            }
+
             try
             {
-                return RedirectToAction(nameof(Index));
+                var result = await _categoryService.UpdateAsync(id, category);
+
+                if (result)
+                    return RedirectToAction(nameof(CategoryList));
+
+                ModelState.AddModelError("", "No se pudo actualizar la categoría.");
+                return View(category);
             }
-            catch
+            catch (Exception ex)
             {
-                return View();
+                _logger.LogError(ex, "Error actualizando la categoría");
+                ModelState.AddModelError("", "Ocurrió un error al actualizar la categoría.");
+                return View(category);
             }
         }
 
         // GET: CategoryController/Delete/5
-        public ActionResult Delete(int id)
+        public async Task<IActionResult> Delete(int id)
         {
-            return View();
+            var categories = await _serviceLocator.GetDataAsync<CategoryDTO>("category");
+            var category = categories.FirstOrDefault(c => c.CategoryId == id);
+
+            if (category == null)
+                return NotFound();
+
+            return View(category);
         }
 
         // POST: CategoryController/Delete/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Delete(int id, IFormCollection collection)
+        public async Task<IActionResult> DeleteConfirmed(int id)
         {
             try
             {
-                return RedirectToAction(nameof(Index));
+                var deleted = await _categoryService.DeleteAsync(id);
+
+                if (deleted)
+                    return RedirectToAction(nameof(CategoryList));
+
+                ModelState.AddModelError("", "No se pudo eliminar la categoría.");
+                return View();
             }
-            catch
+            catch (Exception ex)
             {
+                _logger.LogError(ex, "Error eliminando la categoría con ID {Id}", id);
+                ModelState.AddModelError("", "Ocurrió un error al eliminar la categoría.");
                 return View();
             }
         }

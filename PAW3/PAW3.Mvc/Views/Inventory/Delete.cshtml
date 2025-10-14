@@ -1,0 +1,48 @@
+﻿@model PAW3.Models.DTOs.InventoryDTO
+
+@{
+    ViewData["Title"] = "Delete Inventory";
+}
+
+<h1>Delete Inventory</h1>
+<hr />
+
+<h4>¿Estás seguro que deseas eliminar este inventario?</h4>
+
+<div>
+    <dl class="row mt-3">
+        <dt class="col-sm-3">
+            @Html.DisplayNameFor(model => model.InventoryId)
+        </dt>
+        <dd class="col-sm-9">
+            @Html.DisplayFor(model => model.InventoryId)
+        </dd>
+
+        <dt class="col-sm-3">
+            @Html.DisplayNameFor(model => model.UnitPrice)
+        </dt>
+        <dd class="col-sm-9">
+            @Html.DisplayFor(model => model.UnitPrice)
+        </dd>
+
+        <dt class="col-sm-3">
+            @Html.DisplayNameFor(model => model.UnitsInStock)
+        </dt>
+        <dd class="col-sm-9">
+            @Html.DisplayFor(model => model.UnitsInStock)
+        </dd>
+
+        <dt class="col-sm-3">
+            @Html.DisplayNameFor(model => model.ProductId)
+        </dt>
+        <dd class="col-sm-9">
+            @Html.DisplayFor(model => model.ProductId)
+        </dd>
+    </dl>
+
+    <form asp-action="DeleteConfirmed" method="post">
+        <input type="hidden" name="id" value="@Model.InventoryId" />
+        <button type="submit" class="btn btn-danger">Eliminar</button>
+        <a asp-action="InventoryList" class="btn btn-secondary ms-2">Cancelar</a>
+    </form>
+</div>

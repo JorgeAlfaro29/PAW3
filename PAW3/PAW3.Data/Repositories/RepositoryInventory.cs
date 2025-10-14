@@ -18,6 +18,7 @@ public interface IRepositoryInventory
     Task<bool> UpdateAsync(Inventory entity);
     Task<bool> UpdateManyAsync(IEnumerable<Inventory> entities);
     Task<bool> ExistsAsync(Inventory entity);
+    Task<bool> CheckBeforeSavingAsync(Inventory entity);
 }
 
 public class RepositoryInventory : RepositoryBase<Inventory>, IRepositoryInventory

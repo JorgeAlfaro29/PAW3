@@ -27,20 +27,29 @@ namespace PAW3.Api.Controllers
 
         // POST api/<InventoryController>
         [HttpPost]
-        public void Post([FromBody] string value)
+        public async Task<IActionResult> Post([FromBody] Inventory inventory)
         {
+            var result = await inventoryBusiness.SaveInventoryAsync(inventory);
+            return result ? Ok(inventory) : BadRequest("No se pudo guardar el inventario.");
         }
 
         // PUT api/<InventoryController>/5
         [HttpPut("{id}")]
-        public void Put(int id, [FromBody] string value)
+        public async Task<IActionResult> Put(int id, [FromBody] Inventory inventory)
         {
+            if (id != inventory.InventoryId)
+                return BadRequest("El ID no coincide.");
+
+            var result = await inventoryBusiness.SaveInventoryAsync(inventory);
+            return result ? Ok(inventory) : BadRequest("No se pudo actualizar el inventario.");
         }
 
         // DELETE api/<InventoryController>/5
         [HttpDelete("{id}")]
-        public void Delete(int id)
+        public async Task<IActionResult> Delete(int id)
         {
+            var result = await inventoryBusiness.DeleteInventoryAsync(id);
+            return result ? Ok($"Inventario {id} eliminado correctamente.") : BadRequest("No se pudo eliminar el inventario.");
         }
     }
 }

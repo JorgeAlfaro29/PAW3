@@ -44,7 +44,12 @@ namespace PAW3.Core.BusinessLogic
         {
             // que tengan mas de 5 quantity
             // sabado o domingo solo puedo salvar de 8 a 12
-            return await repositoryInventory.UpdateAsync(inventory);
+
+            inventory.LastUpdated = DateTime.Now;
+            inventory.ModifiedBy = "admin";
+            inventory.DateAdded = DateTime.Now;
+
+            return await repositoryInventory.CheckBeforeSavingAsync(inventory);
         }
 
         /// </inheritdoc>

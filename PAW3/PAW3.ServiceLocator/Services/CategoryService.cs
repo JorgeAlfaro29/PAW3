@@ -10,10 +10,10 @@ namespace PAW3.ServiceLocator.Services
     {
         Task<IEnumerable<CategoryDTO>> GetDataAsync();
         Task<CategoryDTO?> CreateAsync(CategoryDTO category);
-        /*
-        Task<CategoryDTO?> UpdateAsync(int id, CategoryDTO category);
+
+        Task<bool> UpdateAsync(CategoryDTO category);
         Task<bool> DeleteAsync(int id);
-        */
+
 
     }
 
@@ -40,25 +40,26 @@ namespace PAW3.ServiceLocator.Services
             return await JsonProvider.DeserializeAsync<CategoryDTO>(response);
         }
 
-        /*
-        public async Task<CategoryDTO?> UpdateAsync(int id, CategoryDTO category)
+
+        public async Task<bool> UpdateAsync(CategoryDTO category)
         {
             var baseUrl = configuration.GetStringFromAppSettings("APIS", "Category");
-            var fullUrl = $"{baseUrl}/{id}";
+            var fullUrl = $"{baseUrl}/{category.CategoryId}";
+
             var body = JsonSerializer.Serialize(category);
+            var response = await restProvider.PutAsync(fullUrl, string.Empty, body);
 
-            // Como el método ya concatena el endpoint + id internamente,
-            // pasamos string.Empty en lugar de id para evitar doble /
-            var response = await restProvider.PutAsync(fullUrl, "", body);
-
-            return await JsonProvider.DeserializeAsync<CategoryDTO>(response);
+            // Si la respuesta no está vacía, asumimos que fue exitosa
+            return !string.IsNullOrWhiteSpace(response);
         }
-
 
         public async Task<bool> DeleteAsync(int id)
         {
-            var url = configuration.GetStringFromAppSettings("APIS", "Category");
-            var response = await restProvider.DeleteAsync(url, id.ToString());
+            var baseUrl = configuration.GetStringFromAppSettings("APIS", "Category");
+            var fullUrl = $"{baseUrl}/{id}";
+
+            var response = await restProvider.DeleteAsync(fullUrl, string.Empty);
+
             return !string.IsNullOrWhiteSpace(response);
         }
 

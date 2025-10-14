@@ -11,13 +11,15 @@ namespace PAW3.Mvc.Controllers
     {
         private readonly ILogger<InventoryController> _logger;
         private readonly IServiceLocatorService _serviceLocator;
+        private readonly IInventoryServiceMvc _inventoryService;
         private readonly IServiceMapper _serviceMapper;
 
-        public InventoryController(ILogger<InventoryController> logger, IServiceLocatorService serviceLocator, IServiceMapper serviceMapper)
+        public InventoryController(ILogger<InventoryController> logger, IServiceLocatorService serviceLocator, IInventoryServiceMvc inventoryService, IServiceMapper serviceMapper)
         {
             _logger = logger;
             _serviceLocator = serviceLocator;
             _serviceMapper = serviceMapper;
+            _inventoryService = inventoryService;
         }
         // GET: InventoryController
         public async Task<IActionResult> InventoryList()
@@ -45,56 +47,100 @@ namespace PAW3.Mvc.Controllers
         // POST: InventoryController/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create(IFormCollection collection)
+        public async Task<IActionResult> Create(InventoryDTO inventory)
         {
+            if (!ModelState.IsValid)
+                return View(inventory);
+
             try
             {
-                return RedirectToAction(nameof(Index));
+                // Usamos el ServiceLocatorService para crear la categoría en la API
+                //var createdCategory = await _serviceLocator.CreateAsync("category", category);
+                var createdInventory = await _inventoryService.CreateAsync(inventory);
+
+                // Redirigimos a la lista de categorías
+                return RedirectToAction(nameof(InventoryList));
             }
-            catch
+            catch (Exception ex)
             {
-                return View();
+                _logger.LogError(ex, "Error creando el inventario");
+                ModelState.AddModelError("", "No se pudo crear el inventario.");
+                return View(inventory);
             }
         }
 
-        // GET: InventoryController/Edit/5
-        public ActionResult Edit(int id)
+        // GET: CategoryController/Edit/5
+        public async Task<IActionResult> Edit(int id)
         {
-            return View();
+            var inventories = await _serviceLocator.GetDataAsync<InventoryDTO>("inventory");
+            var inventory = inventories.FirstOrDefault(c => c.InventoryId == id);
+
+            if (inventory == null)
+                return NotFound();
+
+            return View(inventory);
         }
 
         // POST: InventoryController/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit(int id, IFormCollection collection)
+        public async Task<IActionResult> Edit(int id, InventoryDTO inventory)
         {
+            if (id != inventory.InventoryId)
+            {
+                ModelState.AddModelError("", "El ID no coincide.");
+                return View(inventory);
+            }
+
             try
             {
-                return RedirectToAction(nameof(Index));
+                var result = await _inventoryService.UpdateAsync(id, inventory);
+
+                if (result)
+                    return RedirectToAction(nameof(InventoryList));
+
+                ModelState.AddModelError("", "No se pudo actualizar el inventario.");
+                return View(inventory);
             }
-            catch
+            catch (Exception ex)
             {
-                return View();
+                _logger.LogError(ex, "Error actualizando el inventario");
+                ModelState.AddModelError("", "Ocurrió un error al actualizar el inventario.");
+                return View(inventory);
             }
         }
 
-        // GET: InventoryController/Delete/5
-        public ActionResult Delete(int id)
+        // GET: CategoryController/Delete/5
+        public async Task<IActionResult> Delete(int id)
         {
-            return View();
+            var inventories = await _serviceLocator.GetDataAsync<InventoryDTO>("inventory");
+            var inventory = inventories.FirstOrDefault(c => c.InventoryId == id);
+
+            if (inventory == null)
+                return NotFound();
+
+            return View(inventory);
         }
 
-        // POST: InventoryController/Delete/5
+        // POST: CategoryController/Delete/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Delete(int id, IFormCollection collection)
+        public async Task<IActionResult> DeleteConfirmed(int id)
         {
             try
             {
-                return RedirectToAction(nameof(Index));
+                var deleted = await _inventoryService.DeleteAsync(id);
+
+                if (deleted)
+                    return RedirectToAction(nameof(InventoryList));
+
+                ModelState.AddModelError("", "No se pudo eliminar el inventario.");
+                return View();
             }
-            catch
+            catch (Exception ex)
             {
+                _logger.LogError(ex, "Error eliminando el inventario con ID {Id}", id);
+                ModelState.AddModelError("", "Ocurrió un error al eliminar el inventario.");
                 return View();
             }
         }
