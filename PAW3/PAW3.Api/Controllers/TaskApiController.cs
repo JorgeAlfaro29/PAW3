@@ -26,20 +26,29 @@ namespace PAW3.Api.Controllers
 
         // POST api/<TaskApiController>
         [HttpPost]
-        public void Post([FromBody] string value)
+        public async Task<IActionResult> Post([FromBody] Tasks task)
         {
+            var result = await taskBusiness.SaveTaskAsync(task);
+            return result ? Ok(task) : BadRequest("No se pudo guardar la tarea.");
         }
 
         // PUT api/<TaskApiController>/5
         [HttpPut("{id}")]
-        public void Put(int id, [FromBody] string value)
+        public async Task<IActionResult> Put(int id, [FromBody] Tasks task)
         {
+            if (id != task.Id)
+                return BadRequest("El ID no coincide.");
+
+            var result = await taskBusiness.SaveTaskAsync(task);
+            return result ? Ok(task) : BadRequest("No se pudo actualizar la tarea.");
         }
 
         // DELETE api/<TaskApiController>/5
         [HttpDelete("{id}")]
-        public void Delete(int id)
+        public async Task<IActionResult> Delete(int id)
         {
+            var result = await taskBusiness.DeleteTaskAsync(id);
+            return result ? Ok($"Tarea {id} eliminada correctamente.") : BadRequest("No se pudo eliminar la tarea.");
         }
     }
 }

@@ -33,6 +33,7 @@ builder.Services.AddScoped<ICategoryServiceMvc, CategoryServiceMvc>();
 builder.Services.AddScoped<IInventoryServiceMvc, InventoryServiceMvc>();
 builder.Services.AddScoped<IProductServiceMvc, ProductServiceMvc>();
 builder.Services.AddScoped<IRoleServiceMvc, RoleServiceMvc>();
+builder.Services.AddScoped<ITaskServiceMvc, TaskServiceMvc>();
 
 var app = builder.Build();
 

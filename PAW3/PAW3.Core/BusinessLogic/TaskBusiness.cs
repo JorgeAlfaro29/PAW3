@@ -29,6 +29,12 @@ namespace PAW3.Core.BusinessLogic
         {
             // que tengan mas de 5 quantity
             // sabado o domingo solo puedo salvar de 8 a 12
+
+            task.DueDate = DateTime.Now;
+            task.Status = "Activo";
+            task.CreatedAt = DateTime.Now;
+            task.LastModified = DateTime.Now;
+            task.ModifiedBy = "admin";
             return await repositorytask.UpdateAsync(task);
         }
 
