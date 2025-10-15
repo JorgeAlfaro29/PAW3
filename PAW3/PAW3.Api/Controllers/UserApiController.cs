@@ -26,20 +26,29 @@ namespace PAW3.Api.Controllers
 
         // POST api/<UserApiController>
         [HttpPost]
-        public void Post([FromBody] string value)
+        public async Task<IActionResult> Post([FromBody] User user)
         {
+            var result = await userBusiness.SaveUserAsync(user);
+            return result ? Ok(user) : BadRequest("No se pudo guardar el usuario.");
         }
 
         // PUT api/<UserApiController>/5
         [HttpPut("{id}")]
-        public void Put(int id, [FromBody] string value)
+        public async Task<IActionResult> Put(int id, [FromBody] User user)
         {
+            if (id != user.UserId)
+                return BadRequest("El ID no coincide.");
+
+            var result = await userBusiness.SaveUserAsync(user);
+            return result ? Ok(user) : BadRequest("No se pudo actualizar el usuario.");
         }
 
         // DELETE api/<UserApiController>/5
         [HttpDelete("{id}")]
-        public void Delete(int id)
+        public async Task<IActionResult> Delete(int id)
         {
+            var result = await userBusiness.DeleteUserAsync(id);
+            return result ? Ok($"Usuario {id} eliminado correctamente.") : BadRequest("No se pudo eliminar el usuario.");
         }
     }
 }

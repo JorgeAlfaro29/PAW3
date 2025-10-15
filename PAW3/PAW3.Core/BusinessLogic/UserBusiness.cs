@@ -30,6 +30,12 @@ namespace PAW3.Core.BusinessLogic
         {
             // que tengan mas de 5 quantity
             // sabado o domingo solo puedo salvar de 8 a 12
+
+            user.IsActive = true;
+            user.ModifiedBy = "admin";
+            user.CreatedAt = DateTime.Now;
+            user.LastModified = DateTime.Now;
+
             return await repositoryUser.UpdateAsync(user);
         }
 

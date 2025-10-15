@@ -12,11 +12,13 @@ namespace PAW3.Mvc.Controllers
         private readonly ILogger<UserController> _logger;
         private readonly IServiceLocatorService _serviceLocator;
         private readonly IServiceMapper _serviceMapper;
-        public UserController(ILogger<UserController> logger, IServiceLocatorService serviceLocator, IServiceMapper serviceMapper)
+        private readonly IUserServiceMvc _userService;
+        public UserController(ILogger<UserController> logger, IServiceLocatorService serviceLocator, IServiceMapper serviceMapper, IUserServiceMvc userService)
         {
             _logger = logger;
             _serviceLocator = serviceLocator;
             _serviceMapper = serviceMapper;
+            _userService = userService;
         }
         // GET: UserService
         public async Task<IActionResult> UserList()
@@ -44,56 +46,100 @@ namespace PAW3.Mvc.Controllers
         // POST: UserService/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create(IFormCollection collection)
+        public async Task<IActionResult> Create(UserDTO user)
         {
+            if (!ModelState.IsValid)
+                return View(user);
+
             try
             {
-                return RedirectToAction(nameof(Index));
+                // Usamos el ServiceLocatorService para crear la categoría en la API
+                //var createdCategory = await _serviceLocator.CreateAsync("category", category);
+                var createdUser = await _userService.CreateAsync(user);
+
+                // Redirigimos a la lista de categorías
+                return RedirectToAction(nameof(UserList));
             }
-            catch
+            catch (Exception ex)
             {
-                return View();
+                _logger.LogError(ex, "Error creando el usuario");
+                ModelState.AddModelError("", "No se pudo crear el usuario.");
+                return View(user);
             }
         }
 
         // GET: UserService/Edit/5
-        public ActionResult Edit(int id)
+        public async Task<IActionResult> Edit(int id)
         {
-            return View();
+            var users = await _serviceLocator.GetDataAsync<UserDTO>("user");
+            var user = users.FirstOrDefault(c => c.UserId == id);
+
+            if (user == null)
+                return NotFound();
+
+            return View(user);
         }
 
         // POST: UserService/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit(int id, IFormCollection collection)
+        public async Task<IActionResult> Edit(int id, UserDTO user)
         {
+            if (id != user.UserId)
+            {
+                ModelState.AddModelError("", "El ID no coincide.");
+                return View(user);
+            }
+
             try
             {
-                return RedirectToAction(nameof(Index));
+                var result = await _userService.UpdateAsync(id, user);
+
+                if (result)
+                    return RedirectToAction(nameof(UserList));
+
+                ModelState.AddModelError("", "No se pudo actualizar el usuario.");
+                return View(user);
             }
-            catch
+            catch (Exception ex)
             {
-                return View();
+                _logger.LogError(ex, "Error actualizando el usuario");
+                ModelState.AddModelError("", "Ocurrió un error al actualizar el usuario.");
+                return View(user);
             }
         }
 
         // GET: UserService/Delete/5
-        public ActionResult Delete(int id)
+        public async Task<IActionResult> Delete(int id)
         {
-            return View();
+            var users = await _serviceLocator.GetDataAsync<UserDTO>("user");
+            var user = users.FirstOrDefault(c => c.UserId == id);
+
+            if (user == null)
+                return NotFound();
+
+            return View(user);
         }
 
         // POST: UserService/Delete/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Delete(int id, IFormCollection collection)
+        public async Task<IActionResult> DeleteConfirmed(int id)
         {
             try
             {
-                return RedirectToAction(nameof(Index));
+                var deleted = await _userService.DeleteAsync(id);
+
+                if (deleted)
+                    return RedirectToAction(nameof(UserList));
+
+                ModelState.AddModelError("", "No se pudo eliminar el usuario.");
+                return View();
             }
-            catch
+            catch (Exception ex)
             {
+                _logger.LogError(ex, "Error eliminando el usuario con ID {Id}", id);
+                ModelState.AddModelError("", "Ocurrió un error al eliminar el usuario.");
                 return View();
             }
         }
