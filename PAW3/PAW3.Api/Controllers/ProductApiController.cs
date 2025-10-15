@@ -27,20 +27,29 @@ namespace PAW3.Api.Controllers
 
         // POST api/<ProductApiController>
         [HttpPost]
-        public void Post([FromBody] string value)
+        public async Task<IActionResult> Post([FromBody] Product product)
         {
+            var result = await productBusiness.SaveProductAsync(product);
+            return result ? Ok(product) : BadRequest("No se pudo guardar el producto.");
         }
 
         // PUT api/<ProductApiController>/5
         [HttpPut("{id}")]
-        public void Put(int id, [FromBody] string value)
+        public async Task<IActionResult> Put(int id, [FromBody] Product product)
         {
+            if (id != product.ProductId)
+                return BadRequest("El ID no coincide.");
+
+            var result = await productBusiness.SaveProductAsync(product);
+            return result ? Ok(product) : BadRequest("No se pudo actualizar  el producto.");
         }
 
         // DELETE api/<ProductApiController>/5
         [HttpDelete("{id}")]
-        public void Delete(int id)
+        public async Task<IActionResult> Delete(int id)
         {
+            var result = await productBusiness.DeleteProductAsync(id);
+            return result ? Ok($"Producto {id} eliminada correctamente.") : BadRequest("No se pudo eliminar el producto.");
         }
     }
 }

@@ -26,20 +26,29 @@ namespace PAW3.Api.Controllers
 
         // POST api/<RoleApiController>
         [HttpPost]
-        public void Post([FromBody] string value)
+        public async Task<IActionResult> Post([FromBody] Role role)
         {
+            var result = await roleBusiness.SaveRoleAsync(role);
+            return result ? Ok(role) : BadRequest("No se pudo guardar el rol.");
         }
 
         // PUT api/<RoleApiController>/5
         [HttpPut("{id}")]
-        public void Put(int id, [FromBody] string value)
+        public async Task<IActionResult> Put(int id, [FromBody] Role role)
         {
+            if (id != role.RoleId)
+                return BadRequest("El ID no coincide.");
+
+            var result = await roleBusiness.SaveRoleAsync(role);
+            return result ? Ok(role) : BadRequest("No se pudo actualizar el rol.");
         }
 
         // DELETE api/<RoleApiController>/5
         [HttpDelete("{id}")]
-        public void Delete(int id)
+        public async Task<IActionResult> Delete(int id)
         {
+            var result = await roleBusiness.DeleteRoleAsync(id);
+            return result ? Ok($"Role {id} eliminada correctamente.") : BadRequest("No se pudo eliminar el rol.");
         }
     }
 }

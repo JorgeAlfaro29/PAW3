@@ -31,6 +31,8 @@ builder.Services.AddScoped<IService<UserActionDTO>, UserActionService>();
 builder.Services.AddScoped<IService<UserRoleDTO>, UserRoleService>();
 builder.Services.AddScoped<ICategoryServiceMvc, CategoryServiceMvc>();
 builder.Services.AddScoped<IInventoryServiceMvc, InventoryServiceMvc>();
+builder.Services.AddScoped<IProductServiceMvc, ProductServiceMvc>();
+builder.Services.AddScoped<IRoleServiceMvc, RoleServiceMvc>();
 
 var app = builder.Build();
 

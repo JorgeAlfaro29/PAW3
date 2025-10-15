@@ -38,7 +38,11 @@ public class ProductBusiness(IRepositoryProduct repositoryProduct) : IProductBus
     {
         // que tengan mas de 5 quantity
         // sabado o domingo solo puedo salvar de 8 a 12
-        return await repositoryProduct.UpdateAsync(product);
+
+        product.LastModified = DateTime.Now;
+        product.ModifiedBy = "admin";
+        
+        return await repositoryProduct.CheckBeforeSavingAsync(product);
     }
 
     /// </inheritdoc>

@@ -12,11 +12,13 @@ namespace PAW3.Mvc.Controllers
         private readonly ILogger<RoleController> _logger;
         private readonly IServiceLocatorService _serviceLocator;
         private readonly IServiceMapper _serviceMapper;
-        public RoleController(ILogger<RoleController> logger, IServiceLocatorService serviceLocator, IServiceMapper serviceMapper)
+        private readonly IRoleServiceMvc _roleService;
+        public RoleController(ILogger<RoleController> logger, IServiceLocatorService serviceLocator, IServiceMapper serviceMapper, IRoleServiceMvc roleService)
         {
             _logger = logger;
             _serviceLocator = serviceLocator;
             _serviceMapper = serviceMapper;
+            _roleService = roleService;
         }
         // GET: RoleController
         public async Task<IActionResult> RoleList()
@@ -44,56 +46,100 @@ namespace PAW3.Mvc.Controllers
         // POST: RoleController/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create(IFormCollection collection)
+        public async Task<IActionResult> Create(RoleDTO role)
         {
+            if (!ModelState.IsValid)
+                return View(role);
+
             try
             {
-                return RedirectToAction(nameof(Index));
+                // Usamos el ServiceLocatorService para crear la categoría en la API
+                //var createdCategory = await _serviceLocator.CreateAsync("category", category);
+                var createdCategory = await _roleService.CreateAsync(role);
+
+                // Redirigimos a la lista de categorías
+                return RedirectToAction(nameof(RoleList));
             }
-            catch
+            catch (Exception ex)
             {
-                return View();
+                _logger.LogError(ex, "Error creando el role");
+                ModelState.AddModelError("", "No se pudo crear el role.");
+                return View(role);
             }
         }
 
         // GET: RoleController/Edit/5
-        public ActionResult Edit(int id)
+        public async Task<IActionResult> Edit(int id)
         {
-            return View();
+            var roles = await _serviceLocator.GetDataAsync<RoleDTO>("role");
+            var role = roles.FirstOrDefault(c => c.RoleId == id);
+
+            if (role == null)
+                return NotFound();
+
+            return View(role);
         }
 
         // POST: RoleController/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit(int id, IFormCollection collection)
+        public async Task<IActionResult> Edit(int id, RoleDTO role)
         {
+            if (id != role.RoleId)
+            {
+                ModelState.AddModelError("", "El ID no coincide.");
+                return View(role);
+            }
+
             try
             {
-                return RedirectToAction(nameof(Index));
+                var result = await _roleService.UpdateAsync(id, role);
+
+                if (result)
+                    return RedirectToAction(nameof(RoleList));
+
+                ModelState.AddModelError("", "No se pudo actualizar el role.");
+                return View(role);
             }
-            catch
+            catch (Exception ex)
             {
-                return View();
+                _logger.LogError(ex, "Error actualizando el role");
+                ModelState.AddModelError("", "Ocurrió un error al actualizar el role.");
+                return View(role);
             }
         }
 
         // GET: RoleController/Delete/5
-        public ActionResult Delete(int id)
+        public async Task<IActionResult> Delete(int id)
         {
-            return View();
+            var roles = await _serviceLocator.GetDataAsync<RoleDTO>("role");
+            var role = roles.FirstOrDefault(c => c.RoleId == id);
+
+            if (role == null)
+                return NotFound();
+
+            return View(role);
         }
 
         // POST: RoleController/Delete/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Delete(int id, IFormCollection collection)
+        public async Task<IActionResult> DeleteConfirmed(int id)
         {
             try
             {
-                return RedirectToAction(nameof(Index));
+                var deleted = await _roleService.DeleteAsync(id);
+
+                if (deleted)
+                    return RedirectToAction(nameof(RoleList));
+
+                ModelState.AddModelError("", "No se pudo eliminar el role.");
+                return View();
             }
-            catch
+            catch (Exception ex)
             {
+                _logger.LogError(ex, "Error eliminando el role con ID {Id}", id);
+                ModelState.AddModelError("", "Ocurrió un error al eliminar el role.");
                 return View();
             }
         }

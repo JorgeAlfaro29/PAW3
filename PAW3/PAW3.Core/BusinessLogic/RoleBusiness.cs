@@ -44,7 +44,7 @@ namespace PAW3.Core.BusinessLogic
         {
             // que tengan mas de 5 quantity
             // sabado o domingo solo puedo salvar de 8 a 12
-            return await repositoryRole.UpdateAsync(role);
+            return await repositoryRole.CheckBeforeSavingAsync(role);
         }
 
         /// </inheritdoc>
