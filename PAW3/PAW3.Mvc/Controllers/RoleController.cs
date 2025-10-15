@@ -55,7 +55,7 @@ namespace PAW3.Mvc.Controllers
             {
                 // Usamos el ServiceLocatorService para crear la categoría en la API
                 //var createdCategory = await _serviceLocator.CreateAsync("category", category);
-                var createdCategory = await _roleService.CreateAsync(role);
+                var createdRole = await _roleService.CreateAsync(role);
 
                 // Redirigimos a la lista de categorías
                 return RedirectToAction(nameof(RoleList));

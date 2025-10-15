@@ -46,6 +46,10 @@ namespace PAW3.Core.BusinessLogic
         {
             // que tengan mas de 5 quantity
             // sabado o domingo solo puedo salvar de 8 a 12
+
+            notification.CreatedAt = DateTime.Now;
+
+
             return await repositoryNotification.UpdateAsync(notification);
         }
 

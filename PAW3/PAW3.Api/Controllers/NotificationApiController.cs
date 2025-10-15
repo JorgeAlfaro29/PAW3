@@ -26,20 +26,29 @@ namespace PAW3.Api.Controllers
 
         // POST api/<NotificationApiController>
         [HttpPost]
-        public void Post([FromBody] string value)
+        public async Task<IActionResult> Post([FromBody] Notification notification)
         {
+            var result = await notificationBusiness.SaveNotificationAsync(notification);
+            return result ? Ok(notification) : BadRequest("No se pudo guardar la notificacion.");
         }
 
         // PUT api/<NotificationApiController>/5
         [HttpPut("{id}")]
-        public void Put(int id, [FromBody] string value)
+        public async Task<IActionResult> Put(int id, [FromBody] Notification notification)
         {
+            if (id != notification.Id)
+                return BadRequest("El ID no coincide.");
+
+            var result = await notificationBusiness.SaveNotificationAsync(notification);
+            return result ? Ok(notification) : BadRequest("No se pudo actualizar la notificacion.");
         }
 
         // DELETE api/<NotificationApiController>/5
         [HttpDelete("{id}")]
-        public void Delete(int id)
+        public async Task<IActionResult> Delete(int id)
         {
+            var result = await notificationBusiness.DeleteNotificationAsync(id);
+            return result ? Ok($"Notificacion {id} eliminada correctamente.") : BadRequest("No se pudo eliminar la notificacion.");
         }
     }
 }
