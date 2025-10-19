@@ -26,6 +26,15 @@ namespace PAW3.ServiceLocator.Controllers
             return "value";
         }*/
 
+        /*
+          ***Patron de Diseño
+          Data Transfer Object (DTO) 
+
+         Como forma de ejemplo podemos ver como en esta api se utiliza el DTO de category, y hace la funcion de tranferencia de datos entre diferentes capas de la aplicacion y asi no exponer la clase original 
+         que tiene interaccion con el context y base datos. 
+
+         */
+
         // POST api/ServiceLocator/category
         [HttpPost("{name}")]
         public async Task<IActionResult> Post(string name, [FromBody] CategoryDTO category)

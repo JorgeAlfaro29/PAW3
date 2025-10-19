@@ -34,6 +34,18 @@ namespace PAW3.Core.BusinessLogic
 
     }
 
+    /*
+     Patron de Diseño
+     Interfaz separada
+
+     Segun la inventigacion realiza la interfaz separada habla de que cada interfaz tiene una responsabilidad unica, en donde se definen metodos de una clase y esa interfaz puede ser llamada
+     en otra clase para utilizar los metodos necesarios, como por ejemplo categoryBusiness que implementa una interfaz de IRepositoryCategory que tiene ya consultas a base de datos en el repository
+     o mapeador de datos y se utliza en esta clase para ser utilizada con la logica cargada en la interfaz de la clase de RepositoryCategory. De esta manera se pueden combinar varias interfaces en una misma clase
+     de otra clase para asi la combinacion de las mismas haga  un metodo mas completo y con mayor funcionalidad. Como es el caso de "GetCategory", que utiliza dos metodos de la interfaz de IRepositoryCategory que son
+     "ReadAsync" y "FindAsync" para obtener los datos de la base de datos segun la logica que se aplique en el metodo y de esa manera en la API se puede obtener los datos referentes a las categorias existentes. De iual
+    forma en esta clase se creo una interfaz para que se llama ICategoryBusiness que esta contiene ya la logica con interfaces de otras clases y solo se hace un llamado desde la API.
+
+     */
 
     public class CategoryBusiness(IRepositoryCategory repositoryCategory) : ICategoryBusiness
     {
