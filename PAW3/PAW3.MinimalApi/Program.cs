@@ -1,16 +1,27 @@
 using Microsoft.EntityFrameworkCore;
+using PAW3.Core.BusinessLogic;
 using PAW3.Data.Models;
+using PAW3.Data.Repositories;
+using PAW3.Models.DTOs;
 
 
 var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddDbContext<ProductDbContext>(opt =>
     opt.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 builder.Services.AddDatabaseDeveloperPageExceptionFilter();
+
+
+
+//REPOSITORIOES Y BUSINESS LOGIC 
+
+builder.Services.AddScoped<IRepositoryProduct, RepositoryProduct>();
+builder.Services.AddScoped<IProductBusiness, ProductBusiness>();
 var app = builder.Build();
 
+
 //obtener todos los prodcutos
-app.MapGet("/ProductItems", async (ProductDbContext db) =>
-    await db.Products.ToListAsync());
+app.MapGet("/ProductItems", async (IProductBusiness productBusiness) =>
+    Results.Ok(await productBusiness.GetProducts(null)));
 
 app.MapGet("/ProductItems/complete", async (ProductDbContext db) =>
     await db.Products.Where(t => t.InventoryId != null).ToListAsync());
@@ -23,16 +34,25 @@ app.MapGet("/ProductItems/{id}", async (int id, ProductDbContext db) =>
             : Results.NotFound());
 
 //crear un producto
-app.MapPost("/ProductItems", async (Product product, ProductDbContext db) =>
+// no pude implementar el DTO, me dio errores en metodos y si los cambiaba todo el codigo se caia
+app.MapPost("/ProductItems", async (Product products, ProductDbContext db) =>
 {
-    db.Products.Add(product);
+
+    db.Products.Add(products);
     await db.SaveChangesAsync();
 
-    return Results.Created($"/ProductItems/{product.ProductId}", product);
+    return Results.Created($"/ProductItems/{products.ProductId}", products);
+
+    /*
+    await productBusiness.SaveProductAsync(products);
+   
+
+    return Results.Created($"/ProductItems/{products.ProductId}", products);
+    */
 });
 
 //editar un producto
-app.MapPut("/ProductItems/{id}", async (int id, Product inputProduct, ProductDbContext db) =>
+app.MapPut("/ProductItems/{id}", async (int id, ProductDTO inputProduct, ProductDbContext db) =>
 {
     var producto = await db.Products.FindAsync(id);
 
@@ -40,6 +60,8 @@ app.MapPut("/ProductItems/{id}", async (int id, Product inputProduct, ProductDbC
 
     producto.ProductName = inputProduct.ProductName;
     producto.Description = inputProduct.Description;
+    producto.Rating = inputProduct.Rating;
+
 
     await db.SaveChangesAsync();
 
@@ -47,14 +69,9 @@ app.MapPut("/ProductItems/{id}", async (int id, Product inputProduct, ProductDbC
 });
 
 //delete
-app.MapDelete("/ProductItems/{id}", async (int id, ProductDbContext db) =>
+app.MapDelete("/ProductItems/{id}", async (int id, IProductBusiness productBusiness) =>
 {
-    if (await db.Products.FindAsync(id) is Product product)
-    {
-        db.Products.Remove(product);
-        await db.SaveChangesAsync();
-        return Results.NoContent();
-    }
+    var product = await productBusiness.DeleteProductAsync(id);
 
     return Results.NotFound();
 });

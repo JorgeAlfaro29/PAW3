@@ -1,6 +1,7 @@
 ﻿using Microsoft.IdentityModel.Protocols.OpenIdConnect;
 using PAW3.Data.Models;
 using PAW3.Data.Repositories;
+using PAW3.Models.DTOs;
 using System;
 using System.Collections.Generic;
 using System.Linq;

@@ -1,7 +1,9 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using PAW3.Data.Models;
 
+
 namespace PAW3.Data.Repositories;
+
 
 public interface IRepositoryProduct
 {
@@ -14,6 +16,8 @@ public interface IRepositoryProduct
     Task<bool> UpdateManyAsync(IEnumerable<Product> entities);
     Task<bool> ExistsAsync(Product entity);
     Task<bool> CheckBeforeSavingAsync(Product entity);
+
+
     //Task<IEnumerable<ProductViewModel>> FilterAsync(Expression<Func<Product, bool>> predicate);
 }
 
